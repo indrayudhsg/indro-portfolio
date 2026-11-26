@@ -9,7 +9,7 @@ export async function GET(context: APIContext) {
     description: 'Process photos and thoughts.',
     site: context.site!,
     items: notes.map((note) => ({
-      title: note.body?.split('\n')[0]?.slice(0, 80) || 'Note',
+      title: note.data.title || note.body?.split('\n')[0]?.slice(0, 80) || 'Note',
       pubDate: note.data.date,
       link: `/notes/${note.id}/`,
       description: note.body ?? '',

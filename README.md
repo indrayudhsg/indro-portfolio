@@ -15,7 +15,7 @@ npm run build    # static site in dist/
 
 | URL | What | Content folder |
 | --- | --- | --- |
-| `/` | Intro, the two doors (Design, Art), latest 3 notes | |
+| `/` | Name, searchable index, selected work, about, latest notes | |
 | `/design/` | Case studies, illustration, branding | `src/content/design/` |
 | `/art/` | Works and curatorial projects | `src/content/art/` |
 | `/art/studio/` | Gallery of etchings, prints, watercolours and crafts, filterable by medium | `src/content/studio/` |
@@ -26,7 +26,22 @@ npm run build    # static site in dist/
 | `/for/<name>/` | Unlisted selection for one application, not indexed | `src/content/selections/` |
 | `/impressum/`, `/datenschutz/` | Required in Germany. Still placeholders | |
 
-## Adding things
+## Managing content
+
+Every page comes from a Markdown file in `src/content/`, and images live in `public/media/`.
+There are two ways to edit them, and both end up as the same files in this repository.
+
+**1. In a browser or on your phone, with Pages CMS.** Go to https://app.pagescms.org, sign in
+with GitHub and open `indro-portfolio`. You get forms for Notes, Studio, Design, Art and
+Teaching, with image upload. Each save is a commit, so the site rebuilds by itself once hosting
+is connected. The forms are defined in `.pages.yml`; if you add a field to
+`src/content.config.ts`, add it there too. Unlisted `/for/` selections are Markdown only.
+
+**2. In Markdown, on your computer.** Add or edit the files below, put images in
+`public/media/<slug>/`, and check with `npm run dev` before committing. Setting `draft: true`
+hides an entry on the live site but keeps it visible in `npm run dev`.
+
+## Adding things in Markdown
 
 **A design project:** add `src/content/design/<slug>.md`:
 
@@ -51,7 +66,7 @@ The case study text.
 `exhibitions` instead of client and role. Use `kind: curatorial` for curatorial projects.
 
 **A studio piece** (etching, print, watercolour, drawing, craft): add `src/content/studio/<slug>.md`
-with `title`, `year`, `medium` (one of etching, print, watercolour, drawing, craft, other),
+with `title`, `year`, `medium` (one of etching, print, watercolour, drawing, digital, craft, other),
 optional `technique` and `dimensions`, and `images`. Process photos go in a note with
 `projects: [<slug>]`.
 
@@ -59,6 +74,7 @@ optional `technique` and `dimensions`, and `images`. Process photos go in a note
 
 ```md
 ---
+title: moss on tubing        # short label, used in the file name and RSS
 date: 2026-11-26
 images:
   - { src: /media/notes/aquarium-01.jpg, alt: Moss on glass tubing }

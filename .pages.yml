@@ -1,0 +1,147 @@
+# Pages CMS (https://pagescms.org): edit the site's Markdown from a browser or phone.
+# Sign in at https://app.pagescms.org with GitHub and open this repository.
+# Every save is a commit to the branch you have open, so the site rebuilds from it.
+# The fields mirror src/content.config.ts. Change both together.
+
+media:
+  input: public/media
+  output: /media
+  rename: safe
+
+content:
+  - name: notes
+    label: Notes
+    type: collection
+    path: src/content/notes
+    filename: "{year}-{month}-{day}-{primary}.md"
+    view:
+      primary: title
+      fields: [title, date]
+      sort: [date]
+      default: { sort: date, order: desc }
+    fields:
+      - { name: title, label: Short label (file name and RSS), type: string, required: true }
+      - { name: date, label: Date, type: date, required: true }
+      - name: images
+        label: Images
+        type: object
+        list: true
+        fields:
+          - { name: src, label: Image, type: image, options: { path: public/media/notes } }
+          - { name: alt, label: Description for screen readers, type: string }
+      - { name: projects, label: Show under these projects, type: string, list: true, description: "Project file names, e.g. through-a-glass-verdant" }
+      - { name: tags, label: Tags, type: string, list: true }
+      - { name: draft, label: Draft (hidden on the site), type: boolean, default: false }
+      - { name: body, label: Text, type: rich-text }
+
+  - name: studio
+    label: Studio
+    type: collection
+    path: src/content/studio
+    filename: "{primary}.md"
+    view:
+      primary: title
+      fields: [title, medium, year]
+      sort: [year, title]
+    fields:
+      - { name: title, label: Title, type: string, required: true }
+      - { name: year, label: Year, type: number, required: true }
+      - name: medium
+        label: Medium
+        type: select
+        required: true
+        options: { values: [etching, print, watercolour, drawing, digital, craft, other] }
+      - { name: technique, label: Technique, type: string, description: "e.g. Drypoint on copper, edition of 8" }
+      - { name: dimensions, label: Size, type: string }
+      - name: images
+        label: Images (first one is the thumbnail)
+        type: object
+        list: true
+        fields:
+          - { name: src, label: Image, type: image, options: { path: public/media/studio } }
+          - { name: alt, label: Description for screen readers, type: string }
+      - { name: tags, label: Tags, type: string, list: true }
+      - { name: available, label: Available, type: boolean, default: false }
+      - { name: draft, label: Draft (hidden on the site), type: boolean, default: false }
+      - { name: body, label: Text, type: rich-text }
+
+  - name: design
+    label: Design
+    type: collection
+    path: src/content/design
+    filename: "{primary}.md"
+    view:
+      primary: title
+      fields: [title, year, kind]
+      sort: [year, title]
+    fields:
+      - { name: title, label: Title, type: string, required: true }
+      - { name: year, label: Year, type: number, required: true }
+      - { name: summary, label: Summary (shown on cards), type: text, required: true }
+      - name: kind
+        label: Kind
+        type: select
+        options: { values: [case-study, illustration, branding] }
+      - { name: client, label: Client, type: string }
+      - { name: role, label: Role, type: string }
+      - { name: cover, label: Cover image, type: image }
+      - { name: tags, label: Tags, type: string, list: true }
+      - { name: featured, label: Featured on home, type: boolean, default: false }
+      - { name: order, label: Order (lower comes first), type: number, default: 100 }
+      - { name: nda, label: Under NDA, type: boolean, default: false }
+      - { name: draft, label: Draft (hidden on the site), type: boolean, default: false }
+      - { name: body, label: Case study, type: rich-text }
+
+  - name: art
+    label: Art
+    type: collection
+    path: src/content/art
+    filename: "{primary}.md"
+    view:
+      primary: title
+      fields: [title, year, kind]
+      sort: [year, title]
+    fields:
+      - { name: title, label: Title, type: string, required: true }
+      - { name: year, label: Year, type: number, required: true }
+      - { name: summary, label: Summary (shown on cards), type: text, required: true }
+      - name: kind
+        label: Kind
+        type: select
+        options: { values: [work, curatorial] }
+      - { name: medium, label: Medium, type: string }
+      - { name: dimensions, label: Size, type: string }
+      - { name: cover, label: Cover image, type: image }
+      - { name: credits, label: Credits, type: string, list: true }
+      - name: exhibitions
+        label: Shown at
+        type: object
+        list: true
+        fields:
+          - { name: title, label: Show, type: string }
+          - { name: place, label: Place, type: string }
+          - { name: date, label: Date, type: string }
+      - { name: tags, label: Tags, type: string, list: true }
+      - { name: featured, label: Featured on home, type: boolean, default: false }
+      - { name: order, label: Order (lower comes first), type: number, default: 100 }
+      - { name: draft, label: Draft (hidden on the site), type: boolean, default: false }
+      - { name: body, label: Text, type: rich-text }
+
+  - name: teaching
+    label: Teaching
+    type: collection
+    path: src/content/teaching
+    filename: "{primary}.md"
+    view:
+      primary: title
+      fields: [title, where, year]
+    fields:
+      - { name: title, label: Course or workshop, type: string, required: true }
+      - { name: year, label: Year, type: number, required: true }
+      - { name: where, label: Where, type: string, required: true }
+      - { name: audience, label: With whom, type: string }
+      - { name: summary, label: Summary, type: text, required: true }
+      - { name: cover, label: Image, type: image }
+      - { name: tags, label: Tags, type: string, list: true }
+      - { name: draft, label: Draft (hidden on the site), type: boolean, default: false }
+      - { name: body, label: Text, type: rich-text }

@@ -45,10 +45,12 @@ const art = defineCollection({
 const notes = defineCollection({
   loader: glob({ pattern: '**/*.md', base: './src/content/notes' }),
   schema: z.object({
+    title: z.string().optional(), // short label for the file name and RSS; not shown as a heading
     date: z.coerce.date(),
     images: z.array(z.object({ src: z.string(), alt: z.string() })).default([]),
     tags: z.array(z.string()).default([]),
-    projects: z.array(z.string()).default([]),
+    // Entry ids (file names without .md). The CMS may save full paths; those are normalised.
+    projects: z.array(z.string()).default([]).transform((ps) => ps.map((p) => p.split('/').pop()!.replace(/\.md$/, ''))),
     draft: z.boolean().default(false),
   }),
 });
