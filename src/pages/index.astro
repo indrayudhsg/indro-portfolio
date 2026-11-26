@@ -23,6 +23,10 @@ const latest = (await getNotes()).slice(0, 3);
       <span class="label">Art</span>
       <span class="quiet">Installations, sound and curatorial work</span>
     </a>
+    <a class="door" href="/art/studio/">
+      <span class="label">Studio</span>
+      <span class="quiet">Etchings, prints, watercolours and crafts</span>
+    </a>
   </section>
 
   {latest.length > 0 && (
@@ -36,7 +40,7 @@ const latest = (await getNotes()).slice(0, 3);
 
 <style>
   .intro { padding: 32px 0 40px; }
-  .doors { display: grid; grid-template-columns: repeat(auto-fit, minmax(260px, 1fr)); gap: 16px; }
+  .doors { display: grid; grid-template-columns: repeat(auto-fit, minmax(220px, 1fr)); gap: 16px; }
   .door { display: flex; flex-direction: column; gap: 8px; padding: 32px; border: 1px solid var(--rule); text-decoration: none; min-height: 200px; justify-content: flex-end; }
   .door:hover { border-color: var(--accent); }
   .label { font-size: clamp(1.6rem, 3vw, 2.2rem); font-weight: 600; }

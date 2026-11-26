@@ -17,6 +17,7 @@ const path = Astro.url.pathname;
 const nav = [
   { href: '/design/', label: 'Design' },
   { href: '/art/', label: 'Art' },
+  { href: '/art/studio/', label: 'Studio' },
   { href: '/notes/', label: 'Notes' },
   { href: lang === 'de' ? '/de/about/' : '/about/', label: lang === 'de' ? 'Über mich' : 'About' },
 ];
@@ -37,7 +38,7 @@ const nav = [
       <a class="name" href="/">{siteName}</a>
       <nav aria-label="Main">
         {nav.map((item) => (
-          <a href={item.href} aria-current={path.startsWith(item.href) ? 'page' : undefined}>{item.label}</a>
+          <a href={item.href} aria-current={path.startsWith(item.href) && !(item.href === '/art/' && path.startsWith('/art/studio/')) ? 'page' : undefined}>{item.label}</a>
         ))}
         {altLang && <a class="lang" href={altLang.href} hreflang={lang === 'en' ? 'de' : 'en'}>{altLang.label}</a>}
       </nav>

@@ -1,11 +1,13 @@
 ---
 import Base from '../../layouts/Base.astro';
 import Card from '../../components/Card.astro';
-import { getArt } from '../../lib/content';
+import StudioGrid from '../../components/StudioGrid.astro';
+import { getArt, getStudio } from '../../lib/content';
 
 const all = await getArt();
 const works = all.filter((e) => e.data.kind === 'work');
 const curatorial = all.filter((e) => e.data.kind === 'curatorial');
+const studio = (await getStudio()).slice(0, 8);
 ---
 <Base title="Art" description="Art works and curatorial projects by Indrayudh Sengupta.">
   <h1>Art</h1>
@@ -22,10 +24,13 @@ const curatorial = all.filter((e) => e.data.kind === 'curatorial');
       ))}
     </ul>
   </section>
-  <section>
-    <h2><a href="/art/studio/">Studio</a></h2>
-    <p class="prose quiet">Etchings, prints, watercolours and crafts. <a href="/art/studio/">See the studio gallery</a>.</p>
-  </section>
+  {studio.length > 0 && (
+    <section>
+      <h2>Studio</h2>
+      <p class="prose quiet">Etchings, prints, watercolours and crafts. <a href="/art/studio/">All studio pieces</a></p>
+      <StudioGrid pieces={studio} media={[]} />
+    </section>
+  )}
   {curatorial.length > 0 && (
     <section>
       <h2>Curatorial</h2>
