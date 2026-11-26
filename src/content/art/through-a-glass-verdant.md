@@ -5,6 +5,7 @@ medium: Installation. Glass, pipes, pumps, lights, plant matter
 summary: An installation built from the non-living parts of an aquarium, about the myth of nature we keep in our living rooms.
 tags: [installation, nature, technology]
 featured: true
+cover: /media/through-a-glass-verdant/cover.jpg
 order: 1
 credits: [Master Project, HfK Bremen, WS 2025/26, "Photos: Tim, Dani (full names to add)"]
 ---

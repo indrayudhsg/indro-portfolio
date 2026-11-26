@@ -65,7 +65,7 @@ const teaching = defineCollection({
 
 // Studio: single finished pieces such as etchings, prints, watercolours and crafts.
 // One file per piece. Process belongs in notes, tagged with the piece's id.
-export const studioMedia = ['etching', 'print', 'watercolour', 'drawing', 'craft', 'other'] as const;
+export const studioMedia = ['etching', 'print', 'watercolour', 'drawing', 'digital', 'craft', 'other'] as const;
 const studio = defineCollection({
   loader: glob({ pattern: '**/*.md', base: './src/content/studio' }),
   schema: z.object({

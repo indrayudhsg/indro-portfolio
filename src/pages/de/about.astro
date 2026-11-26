@@ -3,8 +3,9 @@ import Base from '../../layouts/Base.astro';
 import CV from '../../components/CV.astro';
 ---
 <Base title="Über mich" lang="de" altLang={{ href: '/about/', label: 'English' }}>
-  <h1>Über mich</h1>
-  <div class="prose">
+  <header class="panel glass page-head"><h1 class="display h1">Über mich</h1></header>
+  <div class="split">
+  <div class="panel glass prose">
     <p>
       Ich bin Produkt- und Visual Designer mit fünf Jahren Berufserfahrung, überwiegend im sozialen
       Sektor und in der öffentlichen Verwaltung in Indien. Meine Arbeit reicht von Hilfsmitteln für
@@ -17,7 +18,8 @@ import CV from '../../components/CV.astro';
       Technik und unseren Versuch, das Lebendige nah bei uns zu halten.
     </p>
     <p>Ich unterrichte auch, siehe <a href="/teaching/">Teaching</a> (auf Englisch).</p>
-    <p><!-- TODO: Kontakt-E-Mail --><strong>Kontakt:</strong> <span class="quiet">E-Mail folgt</span></p>
+    <p class="contact"><!-- TODO: Kontakt-E-Mail --><strong>Kontakt:</strong> <span class="quiet">E-Mail folgt</span></p>
   </div>
-  <CV lang="de" />
+  <div class="panel glass"><CV lang="de" /></div>
+  </div>
 </Base>

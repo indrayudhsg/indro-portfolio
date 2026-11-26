@@ -5,8 +5,10 @@ import { getNotes } from '../../lib/content';
 
 const notes = await getNotes();
 ---
-<Base title="Notes" description="Process photos and thoughts.">
-  <h1>Notes</h1>
-  <p class="prose quiet">Process photos and thoughts, newest first. <a href="/notes/rss.xml">Follow by RSS</a>.</p>
-  {notes.map((note) => <Note note={note} />)}
+<Base title="Notes" description="Process photos and thoughts." backdrop={notes.find((n) => n.data.images[0])?.data.images[0].src}>
+  <header class="panel glass page-head">
+    <h1 class="display h1">Notes</h1>
+    <p class="lede">Process photos and thoughts, newest first. <a href="/notes/rss.xml">Follow by RSS</a>.</p>
+  </header>
+  <section class="panel glass">{notes.map((note) => <Note note={note} />)}</section>
 </Base>

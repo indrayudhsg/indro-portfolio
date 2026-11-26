@@ -2,6 +2,7 @@
 import Base from '../../layouts/Base.astro';
 import Card from '../../components/Card.astro';
 import StudioGrid from '../../components/StudioGrid.astro';
+import BackdropHover from '../../components/BackdropHover.astro';
 import { getArt, getStudio } from '../../lib/content';
 
 const all = await getArt();
@@ -9,36 +10,35 @@ const works = all.filter((e) => e.data.kind === 'work');
 const curatorial = all.filter((e) => e.data.kind === 'curatorial');
 const studio = (await getStudio()).slice(0, 8);
 ---
-<Base title="Art" description="Art works and curatorial projects by Indrayudh Sengupta.">
-  <h1>Art</h1>
-  <p class="prose quiet">
+<Base title="Art" description="Art works and curatorial projects by Indrayudh Sengupta." backdrop={all.find((e) => e.data.cover)?.data.cover}>
+  <header class="panel glass page-head">
+    <h1 class="display h1">Art</h1>
     <!-- TODO: artist statement, two or three sentences. -->
-    Installations and sound works about nature, technology and care.
-  </p>
-  <section>
-    <h2>Works</h2>
-    <ul class="grid">
+    <p class="lede">Installations and sound works about nature, technology and care.</p>
+  </header>
+  <section class="panel glass">
+    <div class="sec-h"><h2 class="display h2">Works</h2></div>
+    <ul class="cards">
       {works.map((e) => (
-        <Card href={`/art/${e.id}/`} title={e.data.title} summary={e.data.summary} cover={e.data.cover}
-          meta={[e.data.medium, e.data.year].filter(Boolean).join(' · ')} />
+        <Card href={`/art/${e.id}/`} title={e.data.title} summary={e.data.summary} cover={e.data.cover} meta={String(e.data.year)} />
       ))}
     </ul>
   </section>
   {studio.length > 0 && (
-    <section>
-      <h2>Studio</h2>
-      <p class="prose quiet">Etchings, prints, watercolours and crafts. <a href="/art/studio/">All studio pieces</a></p>
+    <section class="panel glass">
+      <div class="sec-h"><h2 class="display h2">Studio</h2><a href="/art/studio/">All studio pieces</a></div>
       <StudioGrid pieces={studio} media={[]} />
     </section>
   )}
   {curatorial.length > 0 && (
-    <section>
-      <h2>Curatorial</h2>
-      <ul class="grid">
+    <section class="panel glass">
+      <div class="sec-h"><h2 class="display h2">Curatorial</h2></div>
+      <ul class="cards">
         {curatorial.map((e) => (
           <Card href={`/art/${e.id}/`} title={e.data.title} summary={e.data.summary} cover={e.data.cover} meta={String(e.data.year)} />
         ))}
       </ul>
     </section>
   )}
+  <BackdropHover />
 </Base>

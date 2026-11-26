@@ -6,6 +6,7 @@ role: Storyboards, illustration, Articulate Storyline build, user testing
 summary: Seven modules of mobile "mobisodes" with 44 lessons that help young people plan their careers, plus a micro-website of career paths.
 tags: [e-learning, pedagogical design, narrative design, UX, illustration]
 featured: true
+cover: /media/quest-e-learning/cover.jpg
 order: 2
 ---
 

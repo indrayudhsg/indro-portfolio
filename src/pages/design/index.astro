@@ -1,6 +1,7 @@
 ---
 import Base from '../../layouts/Base.astro';
 import Card from '../../components/Card.astro';
+import BackdropHover from '../../components/BackdropHover.astro';
 import { getDesign } from '../../lib/content';
 
 const all = await getDesign();
@@ -10,18 +11,21 @@ const groups = [
   { title: 'Branding', items: all.filter((e) => e.data.kind === 'branding') },
 ].filter((g) => g.items.length > 0);
 ---
-<Base title="Design" description="Design case studies and illustration by Indrayudh Sengupta.">
-  <h1>Design</h1>
-  <p class="prose quiet">Product, UX and visual design, mostly for the public and social sector. <a href="/about/">CV and contact</a>.</p>
+<Base title="Design" description="Design case studies and illustration by Indrayudh Sengupta." backdrop={all.find((e) => e.data.cover)?.data.cover}>
+  <header class="panel glass page-head">
+    <h1 class="display h1">Design</h1>
+    <p class="lede">Product, UX and visual design, mostly for the public and social sector. <a href="/about/">CV and contact</a>.</p>
+  </header>
   {groups.map((g) => (
-    <section>
-      <h2>{g.title}</h2>
-      <ul class="grid">
+    <section class="panel glass">
+      <div class="sec-h"><h2 class="display h2">{g.title}</h2></div>
+      <ul class="cards">
         {g.items.map((e) => (
           <Card href={`/design/${e.id}/`} title={e.data.title} summary={e.data.summary} cover={e.data.cover}
-            meta={[e.data.client, e.data.year].filter(Boolean).join(' · ')} />
+            meta={String(e.data.year)} />
         ))}
       </ul>
     </section>
   ))}
+  <BackdropHover />
 </Base>

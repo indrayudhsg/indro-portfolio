@@ -3,8 +3,9 @@ import Base from '../layouts/Base.astro';
 import CV from '../components/CV.astro';
 ---
 <Base title="About" altLang={{ href: '/de/about/', label: 'Deutsch' }}>
-  <h1>About</h1>
-  <div class="prose">
+  <header class="panel glass page-head"><h1 class="display h1">About</h1></header>
+  <div class="split">
+  <div class="panel glass prose">
     <p>
       I am a product and visual designer with five years of experience, mostly in the social
       development and public sector in India. My work ranges from assistive devices for people with
@@ -16,7 +17,8 @@ import CV from '../components/CV.astro';
       ways we try to keep the living close.
     </p>
     <p>I also teach. See <a href="/teaching/">Teaching</a>.</p>
-    <p><!-- TODO: contact email --><strong>Contact:</strong> <span class="quiet">email to be added</span></p>
+    <p class="contact"><!-- TODO: contact email --><strong>Contact:</strong> <span class="quiet">email to be added</span></p>
   </div>
-  <CV />
+  <div class="panel glass"><CV /></div>
+  </div>
 </Base>

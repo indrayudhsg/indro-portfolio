@@ -1,6 +1,7 @@
 ---
 import Base from '../../../../layouts/Base.astro';
 import StudioGrid from '../../../../components/StudioGrid.astro';
+import BackdropHover from '../../../../components/BackdropHover.astro';
 import { getStudio, mediumLabel } from '../../../../lib/content';
 import { studioMedia } from '../../../../content.config';
 
@@ -12,8 +13,11 @@ export async function getStaticPaths() {
 const { medium } = Astro.params;
 const { media, pieces } = Astro.props;
 ---
-<Base title={`${mediumLabel[medium]} · Studio`}>
-  <p class="quiet"><a href="/art/">Art</a> / <a href="/art/studio/">Studio</a></p>
-  <h1>{mediumLabel[medium]}</h1>
-  <StudioGrid pieces={pieces} media={media} current={medium} />
+<Base title={`${mediumLabel[medium]} · Studio`} backdrop={pieces[0]?.data.images[0]?.src}>
+  <header class="panel glass page-head">
+    <nav class="crumb" aria-label="Breadcrumb"><a href="/art/">Art</a><span aria-hidden="true">/</span><a href="/art/studio/">Studio</a><span aria-hidden="true">/</span></nav>
+    <h1 class="display h1">{mediumLabel[medium]}</h1>
+  </header>
+  <section class="panel glass"><StudioGrid pieces={pieces} media={media} current={medium} /></section>
+  <BackdropHover />
 </Base>

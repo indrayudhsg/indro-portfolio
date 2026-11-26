@@ -1,6 +1,7 @@
 ---
 import { render } from 'astro:content';
 import Base from '../../../layouts/Base.astro';
+import Entry from '../../../components/Entry.astro';
 import ProcessStrip from '../../../components/ProcessStrip.astro';
 import { getStudio, mediumLabel } from '../../../lib/content';
 
@@ -11,19 +12,11 @@ const { entry } = Astro.props;
 const { Content } = await render(entry);
 const d = entry.data;
 ---
-<Base title={d.title}>
-  <p class="quiet"><a href="/art/">Art</a> / <a href="/art/studio/">Studio</a> / <a href={`/art/studio/medium/${d.medium}/`}>{mediumLabel[d.medium]}</a></p>
-  <h1>{d.title}</h1>
-  <dl class="facts">
-    <dt>Year</dt><dd>{d.year}</dd>
-    <dt>Medium</dt><dd>{d.technique ?? mediumLabel[d.medium]}</dd>
-    {d.dimensions && <><dt>Size</dt><dd>{d.dimensions}</dd></>}
-  </dl>
-  {d.images.map((img) => <img class="piece" src={img.src} alt={img.alt} />)}
-  <div class="prose"><Content /></div>
-  <ProcessStrip projectId={entry.id} />
+<Base title={d.title} backdrop={d.images[0]?.src}>
+  <Entry crumbs={[{ href: '/art/', label: 'Art' }, { href: '/art/studio/', label: 'Studio' }, { href: `/art/studio/medium/${d.medium}/`, label: mediumLabel[d.medium] }]}
+    title={d.title} tags={d.tags} images={d.images}
+    facts={[['Year', String(d.year)], ['Medium', d.technique ?? mediumLabel[d.medium]], ['Size', d.dimensions], ['Available', d.available ? 'Yes, ask me' : undefined]]}>
+    <Content />
+    <ProcessStrip slot="after" projectId={entry.id} />
+  </Entry>
 </Base>
-
-<style>
-  .piece { max-height: 80vh; width: auto; margin: 0 0 16px; }
-</style>

@@ -6,8 +6,8 @@ interface Props { projectId: string; }
 const notes = await getNotesFor(Astro.props.projectId);
 ---
 {notes.length > 0 && (
-  <section aria-labelledby="process">
-    <h2 id="process">Process notes</h2>
+  <section class="panel glass" aria-labelledby="process">
+    <div class="sec-h"><h2 class="display h2" id="process">Process</h2><a href="/notes/">All notes</a></div>
     {notes.map((note) => <Note note={note} />)}
   </section>
 )}

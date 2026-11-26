@@ -28,8 +28,18 @@ export const mediumLabel: Record<string, string> = {
   watercolour: 'Watercolours',
   drawing: 'Drawings',
   craft: 'Crafts',
+  digital: 'Digital paintings',
   other: 'Other',
 };
+
+/** Featured design and art entries with a cover image, for the home page plates. */
+export async function getFeatured() {
+  const all = [
+    ...(await getArt()).map((e) => ({ e, href: `/art/${e.id}/`, section: 'Art' })),
+    ...(await getDesign()).map((e) => ({ e, href: `/design/${e.id}/`, section: 'Design' })),
+  ];
+  return all.filter(({ e }) => e.data.featured && e.data.cover);
+}
 
 export async function getTeaching() {
   return (await getCollection('teaching', live)).sort(byOrderThenYear);
@@ -49,26 +59,37 @@ export async function getNotesFor(projectId: string) {
 export type IndexRow = {
   title: string;
   year: number;
-  section: 'Design' | 'Art' | 'Teaching';
+  section: 'Design' | 'Art' | 'Studio' | 'Teaching';
+  medium: string;
   href: string;
   tags: string[];
+  cover?: string;
 };
 
+/** Everything searchable, newest first. Studio pieces are included so a search for "etching" finds them. */
 export async function getIndex(): Promise<IndexRow[]> {
   const rows: IndexRow[] = [
-    ...(await getDesign()).map((e) => row(e, 'Design', '/design/')),
-    ...(await getArt()).map((e) => row(e, 'Art', '/art/')),
-    ...(await getTeaching()).map((e) => row(e, 'Teaching', '/teaching/')),
+    ...(await getDesign()).map((e) => ({
+      title: e.data.title, year: e.data.year, section: 'Design' as const,
+      medium: [e.data.client?.split(',')[0], e.data.kind === 'case-study' ? undefined : e.data.kind].filter(Boolean).join(', ') || 'Case study',
+      href: `/design/${e.id}/`, tags: e.data.tags, cover: e.data.cover,
+    })),
+    ...(await getArt()).map((e) => ({
+      title: e.data.title, year: e.data.year, section: 'Art' as const,
+      medium: e.data.kind === 'curatorial' ? 'Curatorial' : (e.data.medium ?? '').split('.')[0],
+      href: `/art/${e.id}/`, tags: e.data.tags, cover: e.data.cover,
+    })),
+    ...(await getStudio()).map((e) => ({
+      title: e.data.title, year: e.data.year, section: 'Studio' as const,
+      medium: e.data.technique ?? mediumLabel[e.data.medium], href: `/art/studio/${e.id}/`,
+      tags: e.data.tags, cover: e.data.images[0]?.src,
+    })),
+    ...(await getTeaching()).map((e) => ({
+      title: e.data.title, year: e.data.year, section: 'Teaching' as const,
+      medium: e.data.where, href: `/teaching/#${e.id}`, tags: e.data.tags, cover: e.data.cover,
+    })),
   ];
   return rows.sort((a, b) => b.year - a.year || a.title.localeCompare(b.title));
-}
-
-function row(
-  e: CollectionEntry<'design' | 'art' | 'teaching'>,
-  section: IndexRow['section'],
-  base: string,
-): IndexRow {
-  return { title: e.data.title, year: e.data.year, section, href: base + e.id + '/', tags: e.data.tags };
 }
 
 export const formatDate = (d: Date, lang = 'en') =>

@@ -1,5 +1,6 @@
 ---
 import type { CollectionEntry } from 'astro:content';
+import Card from './Card.astro';
 import { mediumLabel } from '../lib/content';
 
 interface Props {
@@ -9,32 +10,20 @@ interface Props {
 }
 const { pieces, media, current } = Astro.props;
 ---
-{media.length > 0 && <nav class="filter" aria-label="Filter by medium">
+{media.length > 1 && <nav class="pills filter" aria-label="Filter by medium">
   <a href="/art/studio/" aria-current={!current ? 'page' : undefined}>All</a>
   {media.map((m) => (
     <a href={`/art/studio/medium/${m}/`} aria-current={current === m ? 'page' : undefined}>{mediumLabel[m]}</a>
   ))}
 </nav>}
-<ul class="studio">
+<ul class="cards studio">
   {pieces.map((p) => (
-    <li>
-      <a href={`/art/studio/${p.id}/`}>
-        <div class="img">{p.data.images[0] && <img src={p.data.images[0].src} alt={p.data.images[0].alt} loading="lazy" />}</div>
-        <span class="t">{p.data.title}</span>
-        <span class="quiet">{p.data.technique ?? mediumLabel[p.data.medium]}, {p.data.year}</span>
-      </a>
-    </li>
+    <Card href={`/art/studio/${p.id}/`} title={p.data.title} cover={p.data.images[0]?.src} alt={p.data.images[0]?.alt}
+      meta={String(p.data.year)} summary={p.data.technique ?? mediumLabel[p.data.medium]} square />
   ))}
 </ul>
 
 <style>
-  .filter { display: flex; flex-wrap: wrap; gap: 8px; margin: 0 0 24px; }
-  .filter a { border: 1px solid var(--rule); border-radius: 999px; padding: 4px 14px; text-decoration: none; font-size: 0.9rem; }
-  .filter a[aria-current='page'] { border-color: var(--ink); }
-  .studio { list-style: none; padding: 0; margin: 0; display: grid; gap: 24px 16px; grid-template-columns: repeat(auto-fill, minmax(140px, 1fr)); }
-  .studio a { display: flex; flex-direction: column; gap: 2px; text-decoration: none; }
-  .img { aspect-ratio: 1; background: var(--rule); margin-bottom: 8px; overflow: hidden; }
-  .img img { width: 100%; height: 100%; object-fit: contain; }
-  .t { font-weight: 500; }
-  .quiet { font-size: 0.85rem; }
+  .filter { margin: 0 0 16px; }
+  .studio { grid-template-columns: repeat(auto-fill, minmax(150px, 1fr)); }
 </style>

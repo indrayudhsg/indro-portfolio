@@ -1,6 +1,7 @@
 ---
 import { render } from 'astro:content';
 import Base from '../../layouts/Base.astro';
+import Entry from '../../components/Entry.astro';
 import ProcessStrip from '../../components/ProcessStrip.astro';
 import { getDesign } from '../../lib/content';
 
@@ -12,19 +13,10 @@ const { entry } = Astro.props;
 const { Content } = await render(entry);
 const d = entry.data;
 ---
-<Base title={d.title} description={d.summary}>
-  <article>
-    <p class="quiet"><a href="/design/">Design</a></p>
-    <h1>{d.title}</h1>
-    <p class="prose">{d.summary}</p>
-    <dl class="facts">
-      {d.client && <><dt>Client</dt><dd>{d.client}</dd></>}
-      <dt>Year</dt><dd>{d.year}</dd>
-      {d.role && <><dt>Role</dt><dd>{d.role}</dd></>}
-    </dl>
-    {d.cover && <img src={d.cover} alt="" />}
-    <div class="prose"><Content /></div>
-    {d.tags.length > 0 && <ul class="tags">{d.tags.map((t) => <li>{t}</li>)}</ul>}
-    <ProcessStrip projectId={entry.id} />
-  </article>
+<Base title={d.title} description={d.summary} backdrop={d.cover}>
+  <Entry crumbs={[{ href: '/design/', label: 'Design' }]} title={d.title} summary={d.summary} tags={d.tags}
+    facts={[['Client', d.client], ['Year', String(d.year)], ['Role', d.role]]}>
+    <Content />
+    <ProcessStrip slot="after" projectId={entry.id} />
+  </Entry>
 </Base>

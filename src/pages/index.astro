@@ -1,47 +1,77 @@
 ---
 import Base from '../layouts/Base.astro';
+import Card from '../components/Card.astro';
 import Note from '../components/Note.astro';
-import { getNotes } from '../lib/content';
+import WorkIndex from '../components/WorkIndex.astro';
+import BackdropHover from '../components/BackdropHover.astro';
+import { getFeatured, getIndex, getNotes, getStudio } from '../lib/content';
 
-const latest = (await getNotes()).slice(0, 3);
+const rows = await getIndex();
+const featured = await getFeatured();
+// Fill the last row of Selected with studio pieces.
+const studio = (await getStudio()).filter((p) => p.data.images[0]).slice(0, (3 - (featured.length % 3)) % 3);
+const latest = (await getNotes()).slice(0, 2);
+const first = featured[0];
 ---
-<Base>
-  <section class="intro prose">
-    <h1>Designer and media artist, based in Bremen.</h1>
-    <p class="quiet">
-      I design products and learning experiences for the public and social sector, and make
-      installations about nature, technology and the things we keep alive.
-    </p>
+<Base bare backdrop={first?.e.data.cover}>
+  <section class="hero">
+    <div class="lead glass">
+      <h1 class="display h1">Indrayudh<br />Sengupta</h1>
+      <p class="role">Designer and media artist in Bremen. Products and learning for the public sector; installations about nature, technology and care.</p>
+      <WorkIndex rows={rows} />
+    </div>
+    {first && (
+      <a class="caption glass" href={first.href} data-caption>
+        <b>{first.e.data.title}</b>
+        <span>{[first.section, first.e.data.year].join(' · ')}</span>
+      </a>
+    )}
   </section>
 
-  <section class="doors" aria-label="Choose a section">
-    <a class="door" href="/design/">
-      <span class="label">Design</span>
-      <span class="quiet">UX, product and visual design case studies, illustration</span>
-    </a>
-    <a class="door" href="/art/">
-      <span class="label">Art</span>
-      <span class="quiet">Installations, sound and curatorial work</span>
-    </a>
-    <a class="door" href="/art/studio/">
-      <span class="label">Studio</span>
-      <span class="quiet">Etchings, prints, watercolours and crafts</span>
-    </a>
+  <section class="panel glass" aria-labelledby="selected">
+    <div class="sec-h"><h2 class="display h2" id="selected">Selected</h2><a href="/work/">Full index</a></div>
+    <ul class="cards">
+      {featured.map(({ e, href, section }) => (
+        <Card href={href} title={e.data.title} cover={e.data.cover} meta={`${section} · ${e.data.year}`} summary={e.data.summary} />
+      ))}
+      {studio.map((p) => (
+        <Card href={`/art/studio/${p.id}/`} title={p.data.title} cover={p.data.images[0].src} alt={p.data.images[0].alt} meta={`Studio · ${p.data.year}`} summary={p.data.technique} />
+      ))}
+    </ul>
   </section>
 
-  {latest.length > 0 && (
-    <section aria-labelledby="latest">
-      <h2 id="latest">Latest notes</h2>
-      {latest.map((note) => <Note note={note} />)}
-      <p><a href="/notes/">All notes</a></p>
+  <div class="duo">
+    <section class="panel glass" aria-labelledby="about">
+      <div class="sec-h"><h2 class="display h2" id="about">About</h2><a href="/about/">CV</a></div>
+      <p class="statement">I spent five years designing for the social and public sector in India. Now, in an MA at HfK Bremen, my practice has turned to media art.</p>
+      <dl class="facts">
+        <dt>Now</dt><dd>MA Digital Media, HfK Bremen</dd>
+        <dt>Before</dt><dd>EY, Fold Labs, Vihara, Treemouse</dd>
+        <dt>Teaching</dt><dd><a class="u" href="/teaching/">Visiting faculty, NID</a></dd>
+        <dt>Contact</dt><dd class="quiet">Email to be added</dd>
+      </dl>
     </section>
-  )}
+    <section class="panel glass" aria-labelledby="notes">
+      <div class="sec-h"><h2 class="display h2" id="notes">Notes</h2><a href="/notes/">All notes</a></div>
+      {latest.map((note) => <Note note={note} />)}
+    </section>
+  </div>
+  <BackdropHover />
 </Base>
 
 <style>
-  .intro { padding: 32px 0 40px; }
-  .doors { display: grid; grid-template-columns: repeat(auto-fit, minmax(220px, 1fr)); gap: 16px; }
-  .door { display: flex; flex-direction: column; gap: 8px; padding: 32px; border: 1px solid var(--rule); text-decoration: none; min-height: 200px; justify-content: flex-end; }
-  .door:hover { border-color: var(--accent); }
-  .label { font-size: clamp(1.6rem, 3vw, 2.2rem); font-weight: 600; }
+  .hero { min-height: calc(100svh - 92px); display: grid; grid-template-columns: minmax(0, 460px) 1fr; gap: 16px; align-items: stretch; }
+  .lead { padding: 24px; display: flex; flex-direction: column; gap: 14px; }
+  .role { margin: 0 0 auto; color: var(--fg-quiet); max-width: 36ch; }
+  .caption { align-self: end; justify-self: end; display: grid; gap: 2px; padding: 10px 14px; max-width: 320px; }
+  .caption b { font-weight: 500; }
+  .caption span { font-family: var(--mono); font-size: 0.78rem; color: var(--fg-quiet); }
+  .duo { display: grid; grid-template-columns: minmax(0, 1fr) minmax(0, 1.2fr); gap: 16px; }
+  .statement { font-size: 1.2rem; line-height: 1.35; margin: 0 0 18px; max-width: 34ch; }
+  @media (max-width: 960px) {
+    .hero { grid-template-columns: 1fr; min-height: auto; }
+    .hero { padding-top: 34svh; }
+    .caption { display: none; }
+    .duo { grid-template-columns: 1fr; }
+  }
 </style>

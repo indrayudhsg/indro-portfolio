@@ -8,7 +8,9 @@ export async function getStaticPaths() {
 }
 const { note } = Astro.props;
 ---
-<Base title={`Note, ${formatDate(note.data.date)}`}>
-  <p class="quiet"><a href="/notes/">Notes</a></p>
-  <Note note={note} />
+<Base title={`Note, ${formatDate(note.data.date)}`} backdrop={note.data.images[0]?.src}>
+  <section class="panel glass page-head">
+    <nav class="crumb" aria-label="Breadcrumb"><a href="/notes/">Notes</a><span aria-hidden="true">/</span></nav>
+    <Note note={note} />
+  </section>
 </Base>
