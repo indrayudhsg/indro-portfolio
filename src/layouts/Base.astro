@@ -1,0 +1,107 @@
+---
+import '../styles/global.css';
+
+interface Props {
+  title?: string;
+  description?: string;
+  lang?: 'en' | 'de';
+  altLang?: { href: string; label: string };
+  noindex?: boolean;
+  /** The photograph behind the page. Defaults to Through a Glass Verdant. */
+  backdrop?: string;
+  /** Home page: no top bar name, the big panel carries it. */
+  bare?: boolean;
+}
+
+const {
+  title, description = 'Indrayudh Sengupta: designer and media artist in Bremen.', lang = 'en', altLang,
+  noindex = false, backdrop = '/media/through-a-glass-verdant/cover.jpg', bare = false,
+} = Astro.props;
+const siteName = 'Indrayudh Sengupta';
+const pageTitle = title ? `${title} · ${siteName}` : siteName;
+const path = Astro.url.pathname;
+const nav = [
+  { href: '/design/', label: 'Design' },
+  { href: '/art/', label: 'Art' },
+  { href: '/art/studio/', label: 'Studio' },
+  { href: '/notes/', label: 'Notes' },
+  { href: lang === 'de' ? '/de/about/' : '/about/', label: lang === 'de' ? 'Über mich' : 'About' },
+];
+const isCurrent = (href: string) => path.startsWith(href) && !(href === '/art/' && path.startsWith('/art/studio/'));
+---
+<!doctype html>
+<html lang={lang}>
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover" />
+    <title>{pageTitle}</title>
+    <meta name="description" content={description} />
+    {noindex && <meta name="robots" content="noindex, nofollow" />}
+    <link rel="alternate" type="application/rss+xml" title="Notes" href="/notes/rss.xml" />
+    <link rel="icon" href="/favicon.svg" type="image/svg+xml" />
+    <link rel="preload" as="image" href={backdrop} />
+  </head>
+  <body>
+    <div class="backdrop" aria-hidden="true" data-backdrop>
+      <img class="on" src={backdrop} alt="" />
+      <img alt="" />
+    </div>
+
+    <header class="bar">
+      {!bare && <a class="name glass" href="/">{siteName}</a>}
+      <nav class="glass" aria-label="Main">
+        {nav.map((item) => <a href={item.href} aria-current={isCurrent(item.href) ? 'page' : undefined}>{item.label}</a>)}
+        {altLang && <a class="lang" href={altLang.href} hreflang={lang === 'en' ? 'de' : 'en'}>{altLang.label}</a>}
+      </nav>
+    </header>
+
+    <div class="page">
+      <slot />
+      <footer class="foot glass">
+        <a href="/teaching/">Teaching</a>
+        <a href="/work/">Index</a>
+        <a href="/notes/rss.xml">RSS</a>
+        <a href="/impressum/">Impressum</a>
+        <a href="/datenschutz/">Datenschutz</a>
+      </footer>
+    </div>
+
+    <script>
+      // Pages can swap the photograph behind them: dispatch 'backdrop' with { detail: src }.
+      const layer = document.querySelector<HTMLElement>('[data-backdrop]')!;
+      const [a, b] = [...layer.querySelectorAll('img')];
+      let front = a, back = b;
+      window.addEventListener('backdrop', (e) => {
+        const src = (e as CustomEvent<string>).detail;
+        if (!src || front.getAttribute('src') === src) return;
+        back.onload = () => { back.classList.add('on'); front.classList.remove('on'); [front, back] = [back, front]; };
+        back.src = src;
+      });
+    </script>
+  </body>
+</html>
+
+<style>
+  .backdrop { position: fixed; inset: 0; z-index: 0; background: var(--base); }
+  .backdrop img { position: absolute; inset: 0; width: 100%; height: 100%; object-fit: cover; opacity: 0; }
+  .backdrop img.on { opacity: 1; }
+  @media (prefers-reduced-motion: no-preference) { .backdrop img { transition: opacity 0.7s ease; } }
+  .backdrop::after { content: ''; position: absolute; inset: 0; background: linear-gradient(90deg, rgba(0, 0, 0, 0.28), rgba(0, 0, 0, 0) 60%); }
+
+  .bar { position: fixed; z-index: 10; top: calc(16px + env(safe-area-inset-top, 0px)); left: var(--pad); right: max(16px, env(safe-area-inset-right, 0px)); display: flex; justify-content: space-between; align-items: center; gap: 8px; pointer-events: none; }
+  .bar > * { pointer-events: auto; }
+  .name { padding: 9px 14px; font-weight: 500; }
+  .bar nav { display: flex; flex-wrap: wrap; gap: 2px; padding: 4px; margin-left: auto; font-size: 0.92rem; }
+  .bar nav a { padding: 6px 12px; border-radius: 9px; }
+  .bar nav a:hover { background: var(--hi); }
+  .bar nav a[aria-current='page'] { background: var(--fg); color: #151716; }
+  .lang { color: var(--fg-quiet); }
+  .foot { display: flex; flex-wrap: wrap; gap: 6px 20px; padding: 12px 18px; font-family: var(--mono); font-size: 0.8rem; color: var(--fg-quiet); }
+  .foot a:hover { color: var(--fg); }
+
+  @media (max-width: 640px) {
+    .bar { position: absolute; flex-wrap: wrap; }
+    .name { display: none; }
+    .bar nav { margin-left: 0; }
+  }
+</style>

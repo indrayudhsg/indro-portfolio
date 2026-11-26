@@ -1,0 +1,43 @@
+---
+// Shared layout for a single work: a glass panel with the facts beside the text,
+// then the images on glass, then any process notes. The cover is the page photograph.
+interface Props {
+  crumbs: { href: string; label: string }[];
+  title: string;
+  summary?: string;
+  facts: [string, string | undefined][];
+  tags?: string[];
+  images?: { src: string; alt: string }[];
+}
+const { crumbs, title, summary, facts, tags = [], images = [] } = Astro.props;
+---
+<article class="entry">
+  <header class="panel glass head">
+    <nav class="crumb" aria-label="Breadcrumb">{crumbs.map((c) => <><a href={c.href}>{c.label}</a><span aria-hidden="true">/</span></>)}</nav>
+    <h1 class="display h1">{title}</h1>
+    {summary && <p class="lede">{summary}</p>}
+  </header>
+  <div class="split">
+    <aside class="panel glass">
+      <dl class="facts">{facts.filter(([, v]) => v).map(([k, v]) => <><dt>{k}</dt><dd>{v}</dd></>)}</dl>
+      {tags.length > 0 && <ul class="tags">{tags.map((t) => <li>{t}</li>)}</ul>}
+      <slot name="aside" />
+    </aside>
+    <div class="panel glass prose body"><slot /></div>
+  </div>
+  {images.length > 0 && (
+    <section class="panel glass gallery" aria-label="Images">
+      {images.map((img) => <img src={img.src} alt={img.alt} loading="lazy" />)}
+    </section>
+  )}
+  <slot name="after" />
+</article>
+
+<style>
+  .entry { display: grid; gap: 16px; }
+  .head { padding-top: 26px; margin-top: 28svh; }
+  .body { max-width: none; }
+  .body:empty { display: none; }
+  .split aside { position: sticky; top: 76px; }
+  @media (max-width: 960px) { .split aside { position: static; } .head { margin-top: 22svh; } }
+</style>

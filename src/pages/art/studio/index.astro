@@ -1,0 +1,19 @@
+---
+import Base from '../../../layouts/Base.astro';
+import StudioGrid from '../../../components/StudioGrid.astro';
+import BackdropHover from '../../../components/BackdropHover.astro';
+import { getStudio } from '../../../lib/content';
+import { studioMedia } from '../../../content.config';
+
+const pieces = await getStudio();
+const media = studioMedia.filter((m) => pieces.some((p) => p.data.medium === m));
+---
+<Base title="Studio" description="Etchings, prints, watercolours and crafts by Indrayudh Sengupta." backdrop={pieces[0]?.data.images[0]?.src}>
+  <header class="panel glass page-head">
+    <nav class="crumb" aria-label="Breadcrumb"><a href="/art/">Art</a><span aria-hidden="true">/</span></nav>
+    <h1 class="display h1">Studio</h1>
+    <p class="lede">Etchings, prints, watercolours, paintings and things made by hand. Process lives in <a href="/notes/">Notes</a>.</p>
+  </header>
+  <section class="panel glass"><StudioGrid pieces={pieces} media={media} /></section>
+  <BackdropHover />
+</Base>

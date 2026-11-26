@@ -1,0 +1,19 @@
+---
+interface Props {
+  href: string;
+  title: string;
+  meta?: string;
+  summary?: string;
+  cover?: string;
+  alt?: string;
+  square?: boolean;
+}
+const { href, title, meta, summary, cover, alt = '', square = false } = Astro.props;
+---
+<li>
+  <a class="card" href={href} data-backdrop-src={cover}>
+    <div class:list={['img', { square }]}>{cover ? <img src={cover} alt={alt} loading="lazy" /> : <span>Images to add</span>}</div>
+    <span class="cap"><span>{title}</span>{meta && <span>{meta}</span>}</span>
+    {summary && <p class="sum">{summary}</p>}
+  </a>
+</li>

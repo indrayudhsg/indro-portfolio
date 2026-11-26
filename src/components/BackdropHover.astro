@@ -1,0 +1,11 @@
+---
+// Hovering or focusing any element with data-backdrop-src swaps the page photograph.
+---
+<script>
+  const send = (el: Element | null) => {
+    const src = el?.closest<HTMLElement>('[data-backdrop-src]')?.dataset.backdropSrc;
+    if (src) window.dispatchEvent(new CustomEvent('backdrop', { detail: src }));
+  };
+  document.addEventListener('mouseover', (e) => send(e.target as Element));
+  document.addEventListener('focusin', (e) => send(e.target as Element));
+</script>

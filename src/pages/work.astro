@@ -1,0 +1,16 @@
+---
+import Base from '../layouts/Base.astro';
+import WorkIndex from '../components/WorkIndex.astro';
+import BackdropHover from '../components/BackdropHover.astro';
+import { getIndex } from '../lib/content';
+
+const rows = await getIndex();
+---
+<Base title="Index" description="All work by year.">
+  <header class="panel glass page-head">
+    <h1 class="display h1">Index</h1>
+    <p class="lede">Everything on this site, newest first. Search by title, medium, tag or year.</p>
+  </header>
+  <section class="panel glass"><WorkIndex rows={rows} variant="table" /></section>
+  <BackdropHover />
+</Base>

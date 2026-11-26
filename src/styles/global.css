@@ -1,0 +1,100 @@
+/* Frosted glass. One full-bleed photograph of the work stays fixed behind every page;
+   all content floats over it on frosted panels. A single dark-glass look in both themes,
+   because it always sits on photographs. Fonts are self-hosted (no Google requests). */
+@import '@fontsource-variable/archivo/wdth.css';
+@import '@fontsource-variable/inter-tight';
+@import '@fontsource/dm-mono/400.css';
+@import '@fontsource/dm-mono/500.css';
+
+:root {
+  --base: #1d2320;
+  --glass: rgba(22, 27, 25, 0.42);
+  --glass-strong: rgba(22, 27, 25, 0.62);
+  --line: rgba(255, 255, 255, 0.2);
+  --fg: #f3f5f4;
+  --fg-quiet: rgba(243, 245, 244, 0.66);
+  --hi: rgba(255, 255, 255, 0.1);
+  --chip: rgba(255, 255, 255, 0.06);
+  --display: 'Archivo Variable', 'Arial Narrow', sans-serif;
+  --text: 'Inter Tight Variable', system-ui, sans-serif;
+  --mono: 'DM Mono', ui-monospace, monospace;
+  --pad: max(16px, env(safe-area-inset-left, 0px));
+  --radius: 14px;
+  color-scheme: dark;
+}
+
+* { box-sizing: border-box; }
+html { background: var(--base); }
+body { margin: 0; background: var(--base); color: var(--fg); font-family: var(--text); font-size: 16px; line-height: 1.5; -webkit-font-smoothing: antialiased; }
+img, video { display: block; max-width: 100%; height: auto; }
+a { color: inherit; text-decoration: none; }
+.prose a, a.u { text-decoration: underline; text-decoration-thickness: 1px; text-underline-offset: 3px; }
+button, input { font: inherit; color: inherit; }
+:focus-visible { outline: 2px solid #a8e6d0; outline-offset: 2px; }
+.mono { font-family: var(--mono); }
+.quiet { color: var(--fg-quiet); }
+
+.glass {
+  background: var(--glass);
+  -webkit-backdrop-filter: blur(24px) saturate(1.15);
+  backdrop-filter: blur(24px) saturate(1.15);
+  border: 1px solid var(--line);
+  border-radius: var(--radius);
+}
+@supports not ((backdrop-filter: blur(1px)) or (-webkit-backdrop-filter: blur(1px))) {
+  .glass { background: var(--glass-strong); }
+}
+
+.page { position: relative; z-index: 1; display: grid; gap: 16px; padding: calc(76px + env(safe-area-inset-top, 0px)) var(--pad) 16px; max-width: 1600px; margin: 0 auto; }
+.panel { padding: 22px; min-width: 0; }
+
+.display { font-family: var(--display); font-stretch: 62%; font-weight: 800; line-height: 0.88; letter-spacing: -0.015em; margin: 0; }
+.h1 { font-size: clamp(3rem, 7vw, 6.2rem); }
+.h2 { font-size: clamp(2.1rem, 4.4vw, 3.4rem); line-height: 0.95; }
+.lede { font-size: clamp(1.15rem, 1.8vw, 1.4rem); line-height: 1.35; max-width: 40ch; margin: 14px 0 0; }
+.sec-h { display: flex; justify-content: space-between; align-items: baseline; gap: 16px; margin-bottom: 16px; }
+.sec-h a { font-family: var(--mono); font-size: 0.82rem; color: var(--fg-quiet); }
+.crumb { font-family: var(--mono); font-size: 0.8rem; color: var(--fg-quiet); margin: 0 0 12px; display: flex; flex-wrap: wrap; gap: 4px 8px; }
+.crumb a:hover { color: var(--fg); }
+
+.prose { max-width: 64ch; }
+.prose p, .prose ul, .prose ol { margin: 0 0 0.9em; }
+.prose h2 { font-family: var(--display); font-stretch: 62%; font-weight: 800; font-size: 1.9rem; line-height: 1; margin: 1.4em 0 0.4em; }
+.prose strong { font-weight: 600; }
+
+/* Cards: glass tiles holding an image and a caption */
+.cards { display: grid; grid-template-columns: repeat(3, minmax(0, 1fr)); gap: 12px; list-style: none; padding: 0; margin: 0; }
+.card { display: grid; gap: 10px; padding: 10px; border-radius: 12px; background: var(--chip); border: 1px solid var(--line); height: 100%; align-content: start; }
+.card .img { aspect-ratio: 4 / 3; border-radius: 7px; overflow: hidden; background: var(--hi); display: grid; place-items: center; font-family: var(--mono); font-size: 0.78rem; color: var(--fg-quiet); }
+.card .img img { width: 100%; height: 100%; object-fit: cover; }
+.card .img.square { aspect-ratio: 1; }
+.card .cap { display: flex; justify-content: space-between; gap: 8px; padding: 0 4px; }
+.card .cap span:last-child { font-family: var(--mono); font-size: 0.76rem; color: var(--fg-quiet); white-space: nowrap; padding-top: 2px; }
+.card .sum { margin: 0; padding: 0 4px 4px; font-size: 0.9rem; color: var(--fg-quiet); }
+a.card:hover { background: rgba(255, 255, 255, 0.12); }
+@media (prefers-reduced-motion: no-preference) { a.card { transition: background 0.2s ease, transform 0.2s ease; } a.card:hover { transform: translateY(-2px); } }
+
+.facts { display: grid; grid-template-columns: max-content 1fr; gap: 6px 18px; margin: 0; font-size: 0.95rem; }
+.facts dt { font-family: var(--mono); font-size: 0.78rem; color: var(--fg-quiet); padding-top: 2px; }
+.facts dd { margin: 0; }
+.tags { display: flex; flex-wrap: wrap; gap: 6px; list-style: none; padding: 0; margin: 16px 0 0; }
+.tags li { font-family: var(--mono); font-size: 0.75rem; border: 1px solid var(--line); border-radius: 999px; padding: 2px 10px; color: var(--fg-quiet); }
+
+.pills { display: flex; flex-wrap: wrap; gap: 6px; }
+.pills a, .pills button { border: 1px solid var(--line); background: none; border-radius: 999px; padding: 4px 12px; font-family: var(--mono); font-size: 0.78rem; cursor: pointer; }
+.pills [aria-pressed='true'], .pills [aria-current='page'] { background: var(--fg); color: #151716; border-color: var(--fg); }
+
+.split { display: grid; grid-template-columns: minmax(0, 1fr) minmax(0, 1.5fr); gap: 16px; align-items: start; }
+.gallery { display: grid; gap: 12px; }
+.gallery img { width: auto; max-width: 100%; max-height: 86vh; margin: 0 auto; border-radius: 10px; }
+.page-head { margin-top: 24svh; padding-top: 26px; }
+.page-head .lede { color: var(--fg-quiet); }
+.page-head .lede a { color: var(--fg); text-decoration: underline; text-underline-offset: 3px; }
+.stack { display: grid; gap: 16px; }
+
+table { width: 100%; border-collapse: collapse; }
+td, th { text-align: left; padding: 10px 12px 10px 0; border-top: 1px solid var(--line); vertical-align: top; }
+th { font-family: var(--mono); font-size: 0.78rem; font-weight: 400; color: var(--fg-quiet); }
+
+@media (max-width: 960px) { .page-head { margin-top: 18svh; } .cards { grid-template-columns: repeat(2, minmax(0, 1fr)); } .split { grid-template-columns: 1fr; } }
+@media (max-width: 520px) { .cards { grid-template-columns: 1fr; } .panel { padding: 18px; } }

@@ -1,0 +1,30 @@
+---
+// Unlisted selection pages for a single application, e.g. /for/governikus/.
+// They are not linked anywhere and are marked noindex.
+import { getCollection, getEntries, render } from 'astro:content';
+import Base from '../../layouts/Base.astro';
+import Card from '../../components/Card.astro';
+import BackdropHover from '../../components/BackdropHover.astro';
+
+export async function getStaticPaths() {
+  return (await getCollection('selections')).map((entry) => ({ params: { slug: entry.id }, props: { entry } }));
+}
+const { entry } = Astro.props;
+const { Content } = await render(entry);
+const design = await getEntries(entry.data.design);
+const art = await getEntries(entry.data.art);
+const cover = [...design, ...art].find((e) => e.data.cover)?.data.cover;
+---
+<Base title={entry.data.title} noindex backdrop={cover}>
+  <header class="panel glass page-head">
+    <h1 class="display h1">{entry.data.title}</h1>
+    <div class="prose lede"><Content /></div>
+  </header>
+  <section class="panel glass">
+    <ul class="cards">
+      {design.map((e) => <Card href={`/design/${e.id}/`} title={e.data.title} summary={e.data.summary} cover={e.data.cover} meta={String(e.data.year)} />)}
+      {art.map((e) => <Card href={`/art/${e.id}/`} title={e.data.title} summary={e.data.summary} cover={e.data.cover} meta={String(e.data.year)} />)}
+    </ul>
+  </section>
+  <BackdropHover />
+</Base>

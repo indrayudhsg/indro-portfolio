@@ -1,0 +1,29 @@
+---
+import type { CollectionEntry } from 'astro:content';
+import Card from './Card.astro';
+import { mediumLabel } from '../lib/content';
+
+interface Props {
+  pieces: CollectionEntry<'studio'>[];
+  media: string[]; // media that have at least one piece, for the filter
+  current?: string;
+}
+const { pieces, media, current } = Astro.props;
+---
+{media.length > 1 && <nav class="pills filter" aria-label="Filter by medium">
+  <a href="/art/studio/" aria-current={!current ? 'page' : undefined}>All</a>
+  {media.map((m) => (
+    <a href={`/art/studio/medium/${m}/`} aria-current={current === m ? 'page' : undefined}>{mediumLabel[m]}</a>
+  ))}
+</nav>}
+<ul class="cards studio">
+  {pieces.map((p) => (
+    <Card href={`/art/studio/${p.id}/`} title={p.data.title} cover={p.data.images[0]?.src} alt={p.data.images[0]?.alt}
+      meta={String(p.data.year)} summary={p.data.technique ?? mediumLabel[p.data.medium]} square />
+  ))}
+</ul>
+
+<style>
+  .filter { margin: 0 0 16px; }
+  .studio { grid-template-columns: repeat(auto-fill, minmax(150px, 1fr)); }
+</style>

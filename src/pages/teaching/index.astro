@@ -1,0 +1,29 @@
+---
+import { render } from 'astro:content';
+import Base from '../../layouts/Base.astro';
+import { getTeaching } from '../../lib/content';
+
+const entries = await Promise.all(
+  (await getTeaching()).map(async (e) => ({ e, Content: (await render(e)).Content })),
+);
+---
+<Base title="Teaching" description="Courses and workshops by Indrayudh Sengupta." backdrop={entries.find(({ e }) => e.data.cover)?.e.data.cover}>
+  <header class="panel glass page-head">
+    <h1 class="display h1">Teaching</h1>
+    <p class="lede">Courses and workshops I have taught or led.</p>
+  </header>
+  {entries.map(({ e, Content }) => (
+    <article id={e.id} class="panel glass split">
+      <div>
+        <h2 class="display h2">{e.data.title}</h2>
+        <dl class="facts meta"><dt>Where</dt><dd>{e.data.where}</dd><dt>Year</dt><dd>{e.data.year}</dd>{e.data.audience && <><dt>With</dt><dd>{e.data.audience}</dd></>}</dl>
+      </div>
+      <div class="prose"><Content /></div>
+    </article>
+  ))}
+</Base>
+
+<style>
+  .meta { margin-top: 16px; }
+  article { scroll-margin-top: 80px; }
+</style>

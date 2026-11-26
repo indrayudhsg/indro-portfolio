@@ -1,0 +1,25 @@
+---
+import Base from '../../layouts/Base.astro';
+import CV from '../../components/CV.astro';
+---
+<Base title="Über mich" lang="de" altLang={{ href: '/about/', label: 'English' }}>
+  <header class="panel glass page-head"><h1 class="display h1">Über mich</h1></header>
+  <div class="split">
+  <div class="panel glass prose">
+    <p>
+      Ich bin Produkt- und Visual Designer mit fünf Jahren Berufserfahrung, überwiegend im sozialen
+      Sektor und in der öffentlichen Verwaltung in Indien. Meine Arbeit reicht von Hilfsmitteln für
+      Menschen mit Zerebralparese über E-Learning für junge Berufseinsteiger*innen bis zu digitalen
+      Bürgerservices für Landesregierungen.
+    </p>
+    <p>
+      Zurzeit studiere ich im Master Digitale Medien an der Hochschule für Künste Bremen. Dort hat
+      sich meine Praxis zur Medienkunst hin entwickelt: Installationen und Klangarbeiten über Natur,
+      Technik und unseren Versuch, das Lebendige nah bei uns zu halten.
+    </p>
+    <p>Ich unterrichte auch, siehe <a href="/teaching/">Teaching</a> (auf Englisch).</p>
+    <p class="contact"><!-- TODO: Kontakt-E-Mail --><strong>Kontakt:</strong> <span class="quiet">E-Mail folgt</span></p>
+  </div>
+  <div class="panel glass"><CV lang="de" /></div>
+  </div>
+</Base>

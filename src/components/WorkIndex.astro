@@ -1,0 +1,92 @@
+---
+// Searchable, filterable list of all work. Works without JavaScript (full list).
+// With it, search and section filters narrow the rows; hovering a row swaps the page photograph
+// and updates the caption chip (if the page has one with data-caption).
+import type { IndexRow } from '../lib/content';
+
+interface Props { rows: IndexRow[]; variant?: 'list' | 'table'; }
+const { rows, variant = 'list' } = Astro.props;
+const sections = ['Design', 'Art', 'Studio', 'Teaching'].filter((s) => rows.some((r) => r.section === s));
+---
+<div class:list={['work-index', variant]} data-work-index>
+  <label class="search">
+    <svg width="15" height="15" viewBox="0 0 16 16" fill="none" stroke="currentColor" stroke-width="1.6" aria-hidden="true"><circle cx="7" cy="7" r="5" /><path d="M11 11l3.5 3.5" /></svg>
+    <input type="search" placeholder="Search work, medium, year" autocomplete="off" aria-label="Search work" data-q />
+  </label>
+  <div class="pills" role="group" aria-label="Filter by section">
+    <button type="button" data-f="all" aria-pressed="true">All</button>
+    {sections.map((s) => <button type="button" data-f={s} aria-pressed="false">{s}</button>)}
+  </div>
+  <ul class="rows">
+    {variant === 'table' && <li class="head"><span>Year</span><span>Title</span><span>Section</span><span>Medium</span></li>}
+    {rows.map((r) => (
+      <li data-row data-section={r.section} data-search={`${r.year} ${r.title} ${r.section} ${r.medium} ${r.tags.join(' ')}`.toLowerCase()}>
+        <a href={r.href} data-backdrop-src={r.cover} data-title={r.title} data-meta={`${r.medium ? r.medium + ' · ' : ''}${r.year}`}>
+          <span class="y">{r.year}</span><span class="t">{r.title}</span><span class="s">{r.section}</span>
+          {variant === 'table' && <span class="m">{r.medium}</span>}
+        </a>
+      </li>
+    ))}
+    <li class="empty" hidden data-empty>Nothing matches. Try a medium like "ink" or a year.</li>
+  </ul>
+</div>
+
+<script>
+  for (const root of document.querySelectorAll<HTMLElement>('[data-work-index]')) {
+    const q = root.querySelector<HTMLInputElement>('[data-q]')!;
+    const buttons = [...root.querySelectorAll<HTMLButtonElement>('[data-f]')];
+    const rows = [...root.querySelectorAll<HTMLElement>('[data-row]')];
+    const empty = root.querySelector<HTMLElement>('[data-empty]')!;
+    let filter = 'all';
+    const apply = () => {
+      const term = q.value.trim().toLowerCase();
+      let shown = 0;
+      for (const r of rows) {
+        const ok = (filter === 'all' || r.dataset.section === filter) && (!term || r.dataset.search!.includes(term));
+        r.hidden = !ok;
+        if (ok) shown++;
+      }
+      empty.hidden = shown > 0;
+    };
+    q.addEventListener('input', apply);
+    for (const b of buttons) b.addEventListener('click', () => {
+      filter = b.dataset.f!;
+      for (const x of buttons) x.setAttribute('aria-pressed', String(x === b));
+      apply();
+    });
+    const cap = document.querySelector<HTMLElement>('[data-caption]');
+    const show = (a: HTMLAnchorElement) => {
+      if (!cap || !a.dataset.backdropSrc) return;
+      cap.querySelector('b')!.textContent = a.dataset.title!;
+      cap.querySelector('span')!.textContent = a.dataset.meta!;
+      cap.setAttribute('href', a.getAttribute('href')!);
+    };
+    for (const a of root.querySelectorAll<HTMLAnchorElement>('[data-row] a')) {
+      a.addEventListener('mouseenter', () => show(a));
+      a.addEventListener('focus', () => show(a));
+    }
+  }
+</script>
+
+<style>
+  .search { display: flex; align-items: center; gap: 8px; border: 1px solid var(--line); border-radius: 10px; padding: 8px 12px; background: var(--chip); }
+  .search input { flex: 1; min-width: 0; background: none; border: 0; outline: none; font-family: var(--mono); font-size: 0.88rem; }
+  .search input::placeholder { color: var(--fg-quiet); }
+  .pills { margin: 10px 0 6px; }
+  .rows { list-style: none; margin: 0; padding: 0; }
+  .list .rows { max-height: 320px; overflow-y: auto; scrollbar-width: thin; }
+  .rows li { border-top: 1px solid var(--line); }
+  .rows li[hidden] { display: none; }
+  .rows a, .rows .head { display: grid; grid-template-columns: 52px minmax(0, 1fr) auto; gap: 10px; align-items: baseline; padding: 10px 4px; font-family: var(--mono); font-size: 0.86rem; border-radius: 6px; }
+  .table .rows a, .table .rows .head { grid-template-columns: 60px minmax(0, 2fr) 100px minmax(0, 1.4fr); }
+  .rows .head { color: var(--fg-quiet); font-size: 0.76rem; }
+  .rows a:hover, .rows a:focus-visible { background: var(--hi); }
+  .t { font-family: var(--text); font-size: 0.98rem; }
+  .s, .m { color: var(--fg-quiet); font-size: 0.78rem; }
+  .table .m { font-family: var(--text); font-size: 0.9rem; }
+  .empty { padding: 12px 4px; font-family: var(--mono); font-size: 0.85rem; color: var(--fg-quiet); }
+  @media (max-width: 640px) {
+    .table .rows a, .table .rows .head { grid-template-columns: 44px minmax(0, 1fr) auto; }
+    .table .m, .table .head span:nth-child(4) { display: none; }
+  }
+</style>

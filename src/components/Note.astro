@@ -1,0 +1,24 @@
+---
+import { render, type CollectionEntry } from 'astro:content';
+import { formatDate } from '../lib/content';
+
+interface Props { note: CollectionEntry<'notes'>; }
+const { note } = Astro.props;
+const { Content } = await render(note);
+---
+<article class="note">
+  <a class="date" href={`/notes/${note.id}/`}><time datetime={note.data.date.toISOString()}>{formatDate(note.data.date)}</time></a>
+  <div class="body">
+    <div class="prose"><Content /></div>
+    {note.data.images.length > 0 && <div class="images">{note.data.images.map((img) => <img src={img.src} alt={img.alt} loading="lazy" />)}</div>}
+  </div>
+</article>
+
+<style>
+  .note { display: grid; grid-template-columns: 120px minmax(0, 1fr); gap: 16px; padding: 12px 0; border-top: 1px solid var(--line); }
+  .date { font-family: var(--mono); font-size: 0.8rem; color: var(--fg-quiet); padding-top: 3px; }
+  .prose :global(p) { margin: 0 0 0.4em; }
+  .images { display: grid; gap: 8px; grid-template-columns: repeat(auto-fill, minmax(140px, 1fr)); margin-top: 8px; }
+  .images img { width: 100%; aspect-ratio: 4 / 3; object-fit: cover; border-radius: 6px; }
+  @media (max-width: 640px) { .note { grid-template-columns: 1fr; gap: 4px; } }
+</style>

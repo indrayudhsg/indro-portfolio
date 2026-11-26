@@ -1,0 +1,22 @@
+---
+import { render } from 'astro:content';
+import Base from '../../layouts/Base.astro';
+import Entry from '../../components/Entry.astro';
+import ProcessStrip from '../../components/ProcessStrip.astro';
+import { getDesign } from '../../lib/content';
+
+export async function getStaticPaths() {
+  return (await getDesign()).map((entry) => ({ params: { slug: entry.id }, props: { entry } }));
+}
+
+const { entry } = Astro.props;
+const { Content } = await render(entry);
+const d = entry.data;
+---
+<Base title={d.title} description={d.summary} backdrop={d.cover}>
+  <Entry crumbs={[{ href: '/design/', label: 'Design' }]} title={d.title} summary={d.summary} tags={d.tags}
+    facts={[['Client', d.client], ['Year', String(d.year)], ['Role', d.role]]}>
+    <Content />
+    <ProcessStrip slot="after" projectId={entry.id} />
+  </Entry>
+</Base>

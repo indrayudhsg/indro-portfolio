@@ -1,0 +1,22 @@
+---
+import { render } from 'astro:content';
+import Base from '../../../layouts/Base.astro';
+import Entry from '../../../components/Entry.astro';
+import ProcessStrip from '../../../components/ProcessStrip.astro';
+import { getStudio, mediumLabel } from '../../../lib/content';
+
+export async function getStaticPaths() {
+  return (await getStudio()).map((entry) => ({ params: { id: entry.id }, props: { entry } }));
+}
+const { entry } = Astro.props;
+const { Content } = await render(entry);
+const d = entry.data;
+---
+<Base title={d.title} backdrop={d.images[0]?.src}>
+  <Entry crumbs={[{ href: '/art/', label: 'Art' }, { href: '/art/studio/', label: 'Studio' }, { href: `/art/studio/medium/${d.medium}/`, label: mediumLabel[d.medium] }]}
+    title={d.title} tags={d.tags} images={d.images}
+    facts={[['Year', String(d.year)], ['Medium', d.technique ?? mediumLabel[d.medium]], ['Size', d.dimensions], ['Available', d.available ? 'Yes, ask me' : undefined]]}>
+    <Content />
+    <ProcessStrip slot="after" projectId={entry.id} />
+  </Entry>
+</Base>
