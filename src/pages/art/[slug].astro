@@ -1,0 +1,35 @@
+---
+import { render } from 'astro:content';
+import Base from '../../layouts/Base.astro';
+import ProcessStrip from '../../components/ProcessStrip.astro';
+import { getArt } from '../../lib/content';
+
+export async function getStaticPaths() {
+  return (await getArt()).map((entry) => ({ params: { slug: entry.id }, props: { entry } }));
+}
+
+const { entry } = Astro.props;
+const { Content } = await render(entry);
+const d = entry.data;
+---
+<Base title={d.title} description={d.summary}>
+  <article>
+    <p class="quiet"><a href="/art/">Art</a></p>
+    <h1>{d.title}</h1>
+    <dl class="facts">
+      <dt>Year</dt><dd>{d.year}</dd>
+      {d.medium && <><dt>Medium</dt><dd>{d.medium}</dd></>}
+      {d.dimensions && <><dt>Size</dt><dd>{d.dimensions}</dd></>}
+    </dl>
+    {d.cover && <img src={d.cover} alt="" />}
+    <div class="prose"><Content /></div>
+    {d.exhibitions.length > 0 && (
+      <section>
+        <h2>Shown at</h2>
+        <ul>{d.exhibitions.map((x) => <li>{x.title}, {x.place}, {x.date}</li>)}</ul>
+      </section>
+    )}
+    {d.credits.length > 0 && <p class="quiet">{d.credits.join(' · ')}</p>}
+    <ProcessStrip projectId={entry.id} />
+  </article>
+</Base>

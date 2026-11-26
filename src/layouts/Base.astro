@@ -1,0 +1,67 @@
+---
+import '../styles/global.css';
+
+interface Props {
+  title?: string;
+  description?: string;
+  lang?: 'en' | 'de';
+  /** Link to the same page in the other language, if one exists. */
+  altLang?: { href: string; label: string };
+  noindex?: boolean;
+}
+
+const { title, description = 'Indrayudh Sengupta: designer and media artist.', lang = 'en', altLang, noindex = false } = Astro.props;
+const siteName = 'Indrayudh Sengupta';
+const pageTitle = title ? `${title} · ${siteName}` : siteName;
+const path = Astro.url.pathname;
+const nav = [
+  { href: '/design/', label: 'Design' },
+  { href: '/art/', label: 'Art' },
+  { href: '/notes/', label: 'Notes' },
+  { href: lang === 'de' ? '/de/about/' : '/about/', label: lang === 'de' ? 'Über mich' : 'About' },
+];
+---
+<!doctype html>
+<html lang={lang}>
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <title>{pageTitle}</title>
+    <meta name="description" content={description} />
+    {noindex && <meta name="robots" content="noindex, nofollow" />}
+    <link rel="alternate" type="application/rss+xml" title="Notes" href="/notes/rss.xml" />
+    <link rel="icon" href="/favicon.svg" type="image/svg+xml" />
+  </head>
+  <body>
+    <header class="site-header wrap">
+      <a class="name" href="/">{siteName}</a>
+      <nav aria-label="Main">
+        {nav.map((item) => (
+          <a href={item.href} aria-current={path.startsWith(item.href) ? 'page' : undefined}>{item.label}</a>
+        ))}
+        {altLang && <a class="lang" href={altLang.href} hreflang={lang === 'en' ? 'de' : 'en'}>{altLang.label}</a>}
+      </nav>
+    </header>
+    <main class="wrap">
+      <slot />
+    </main>
+    <footer class="site-footer wrap">
+      <a href="/teaching/">Teaching</a>
+      <a href="/work/">Index</a>
+      <a href="/notes/rss.xml">RSS</a>
+      <a href="/impressum/">Impressum</a>
+      <a href="/datenschutz/">Datenschutz</a>
+    </footer>
+  </body>
+</html>
+
+<style>
+  .site-header { display: flex; flex-wrap: wrap; justify-content: space-between; align-items: baseline; gap: 12px 24px; padding-top: 28px; padding-bottom: 28px; }
+  .name { font-weight: 600; text-decoration: none; }
+  nav { display: flex; flex-wrap: wrap; gap: 4px 20px; }
+  nav a { text-decoration: none; }
+  nav a[aria-current='page'] { text-decoration: underline; }
+  .lang { color: var(--quiet); }
+  main { min-height: 60vh; padding-bottom: 64px; }
+  .site-footer { display: flex; flex-wrap: wrap; gap: 8px 20px; padding-top: 24px; padding-bottom: 40px; border-top: 1px solid var(--rule); color: var(--quiet); font-size: 0.9rem; }
+</style>

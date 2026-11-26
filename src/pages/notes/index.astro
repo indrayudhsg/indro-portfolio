@@ -1,0 +1,12 @@
+---
+import Base from '../../layouts/Base.astro';
+import Note from '../../components/Note.astro';
+import { getNotes } from '../../lib/content';
+
+const notes = await getNotes();
+---
+<Base title="Notes" description="Process photos and thoughts.">
+  <h1>Notes</h1>
+  <p class="prose quiet">Process photos and thoughts, newest first. <a href="/notes/rss.xml">Follow by RSS</a>.</p>
+  {notes.map((note) => <Note note={note} />)}
+</Base>

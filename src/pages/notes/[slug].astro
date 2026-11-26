@@ -1,0 +1,14 @@
+---
+import Base from '../../layouts/Base.astro';
+import Note from '../../components/Note.astro';
+import { getNotes, formatDate } from '../../lib/content';
+
+export async function getStaticPaths() {
+  return (await getNotes()).map((note) => ({ params: { slug: note.id }, props: { note } }));
+}
+const { note } = Astro.props;
+---
+<Base title={`Note, ${formatDate(note.data.date)}`}>
+  <p class="quiet"><a href="/notes/">Notes</a></p>
+  <Note note={note} />
+</Base>

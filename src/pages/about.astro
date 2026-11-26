@@ -1,0 +1,22 @@
+---
+import Base from '../layouts/Base.astro';
+import CV from '../components/CV.astro';
+---
+<Base title="About" altLang={{ href: '/de/about/', label: 'Deutsch' }}>
+  <h1>About</h1>
+  <div class="prose">
+    <p>
+      I am a product and visual designer with five years of experience, mostly in the social
+      development and public sector in India. My work ranges from assistive devices for people with
+      cerebral palsy to e-learning for young jobseekers and citizen services for state governments.
+    </p>
+    <p>
+      I am now doing an MA in Digital Media at Hochschule für Künste Bremen, where my practice has
+      turned towards media art: installations and sound works about nature, technology and the
+      ways we try to keep the living close.
+    </p>
+    <p>I also teach. See <a href="/teaching/">Teaching</a>.</p>
+    <p><!-- TODO: contact email --><strong>Contact:</strong> <span class="quiet">email to be added</span></p>
+  </div>
+  <CV />
+</Base>

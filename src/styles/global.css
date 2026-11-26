@@ -1,0 +1,41 @@
+/* Placeholder visual system. The real look comes in a later design pass. */
+:root {
+  --bg: #fbfaf7;
+  --ink: #1d1d1b;
+  --quiet: #6b6a66;
+  --rule: #e2e0da;
+  --accent: #2f5d50;
+  --measure: 68ch;
+  --gutter: clamp(16px, 4vw, 48px);
+  font-family: ui-sans-serif, system-ui, -apple-system, 'Segoe UI', sans-serif;
+  color: var(--ink);
+  background: var(--bg);
+  line-height: 1.55;
+}
+@media (prefers-color-scheme: dark) {
+  :root { --bg: #151514; --ink: #ecebe6; --quiet: #9d9b94; --rule: #2c2b29; --accent: #8cc2b0; }
+}
+* { box-sizing: border-box; }
+body { margin: 0; }
+a { color: inherit; text-underline-offset: 0.2em; }
+a:hover { color: var(--accent); }
+img, video { max-width: 100%; height: auto; display: block; }
+.wrap { max-width: 1120px; margin: 0 auto; padding: 0 var(--gutter); }
+.prose { max-width: var(--measure); }
+.quiet { color: var(--quiet); }
+h1 { font-size: clamp(1.9rem, 4vw, 2.8rem); line-height: 1.1; letter-spacing: -0.01em; margin: 0 0 0.5em; }
+h2 { font-size: 1.25rem; margin: 2em 0 0.5em; }
+.grid { display: grid; gap: 32px 24px; grid-template-columns: repeat(auto-fill, minmax(260px, 1fr)); padding: 0; list-style: none; }
+.card a { text-decoration: none; display: block; }
+.card .thumb { aspect-ratio: 4 / 3; background: var(--rule); margin-bottom: 12px; overflow: hidden; }
+.card .thumb img { width: 100%; height: 100%; object-fit: cover; }
+.card h3 { margin: 0 0 4px; font-size: 1.05rem; }
+.card p { margin: 0; color: var(--quiet); font-size: 0.95rem; }
+.tags { display: flex; flex-wrap: wrap; gap: 6px; padding: 0; list-style: none; margin: 8px 0 0; }
+.tags li { font-size: 0.8rem; border: 1px solid var(--rule); border-radius: 999px; padding: 1px 10px; color: var(--quiet); }
+.facts { display: grid; grid-template-columns: max-content 1fr; gap: 4px 24px; margin: 1.5em 0; }
+.facts dt { color: var(--quiet); }
+.facts dd { margin: 0; }
+table { border-collapse: collapse; width: 100%; }
+th, td { text-align: left; padding: 10px 12px 10px 0; border-bottom: 1px solid var(--rule); vertical-align: top; }
+th { font-weight: 500; color: var(--quiet); font-size: 0.9rem; }

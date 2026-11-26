@@ -1,0 +1,35 @@
+---
+// Design CV, taken from the 2026 CV. Kept in one place so the English and German
+// About pages show the same facts.
+interface Props { lang?: 'en' | 'de'; }
+const { lang = 'en' } = Astro.props;
+const t = (en: string, de: string) => (lang === 'de' ? de : en);
+
+const experience = [
+  { when: '2023–2024', what: t('Consultant, UX Designer', 'Berater, UX Design'), where: 'Ernst & Young LLP, India' },
+  { when: '2022–2023', what: t('Design Consultant, freelance', 'Design-Beratung, freiberuflich'), where: 'Juhu Beach Studio, NowForm, Globalistan Films, Fold Labs' },
+  { when: '2021–2023', what: t('Visiting Faculty', 'Gastdozent'), where: 'National Institute of Design, India' },
+  { when: '2020–2022', what: t('Design Researcher and Consultant', 'Designforschung und Beratung'), where: 'Vihara Innovation Network, India' },
+  { when: '2019–2021', what: t('Design Consultant', 'Design-Beratung'), where: 'Fold Labs, India' },
+  { when: '2019–2020', what: t('Design Researcher', 'Designforschung'), where: 'Treemouse, India' },
+];
+const education = [
+  { when: t('2024–now', 'seit 2024'), what: 'MA Digital Media', where: 'Hochschule für Künste Bremen' },
+  { when: '2014–2019', what: 'Bachelor of Design, Product Design', where: 'National Institute of Design, Ahmedabad' },
+];
+---
+<section>
+  <h2>{t('Experience', 'Berufserfahrung')}</h2>
+  <table>
+    <tbody>
+      {experience.map((r) => <tr><td class="quiet">{r.when}</td><td>{r.what}<br /><span class="quiet">{r.where}</span></td></tr>)}
+    </tbody>
+  </table>
+  <h2>{t('Education', 'Ausbildung')}</h2>
+  <table>
+    <tbody>
+      {education.map((r) => <tr><td class="quiet">{r.when}</td><td>{r.what}<br /><span class="quiet">{r.where}</span></td></tr>)}
+    </tbody>
+  </table>
+  <!-- TODO: artist CV (shows, residencies, talks) once the list is ready. -->
+</section>

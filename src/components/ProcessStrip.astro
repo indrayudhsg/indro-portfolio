@@ -1,0 +1,13 @@
+---
+import { getNotesFor } from '../lib/content';
+import Note from './Note.astro';
+
+interface Props { projectId: string; }
+const notes = await getNotesFor(Astro.props.projectId);
+---
+{notes.length > 0 && (
+  <section aria-labelledby="process">
+    <h2 id="process">Process notes</h2>
+    {notes.map((note) => <Note note={note} />)}
+  </section>
+)}

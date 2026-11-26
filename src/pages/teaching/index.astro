@@ -1,0 +1,24 @@
+---
+import { render } from 'astro:content';
+import Base from '../../layouts/Base.astro';
+import { getTeaching } from '../../lib/content';
+
+const entries = await Promise.all(
+  (await getTeaching()).map(async (e) => ({ e, Content: (await render(e)).Content })),
+);
+---
+<Base title="Teaching" description="Courses and workshops by Indrayudh Sengupta.">
+  <h1>Teaching</h1>
+  <p class="prose quiet">Courses and workshops I have taught or led.</p>
+  {entries.map(({ e, Content }) => (
+    <article id={e.id} class="entry">
+      <h2>{e.data.title}</h2>
+      <p class="quiet">{e.data.where} · {e.data.year}{e.data.audience && ` · ${e.data.audience}`}</p>
+      <div class="prose"><Content /></div>
+    </article>
+  ))}
+</Base>
+
+<style>
+  .entry { padding-bottom: 16px; border-bottom: 1px solid var(--rule); }
+</style>

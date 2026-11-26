@@ -1,0 +1,43 @@
+---
+import Base from '../layouts/Base.astro';
+import Note from '../components/Note.astro';
+import { getNotes } from '../lib/content';
+
+const latest = (await getNotes()).slice(0, 3);
+---
+<Base>
+  <section class="intro prose">
+    <h1>Designer and media artist, based in Bremen.</h1>
+    <p class="quiet">
+      I design products and learning experiences for the public and social sector, and make
+      installations about nature, technology and the things we keep alive.
+    </p>
+  </section>
+
+  <section class="doors" aria-label="Choose a section">
+    <a class="door" href="/design/">
+      <span class="label">Design</span>
+      <span class="quiet">UX, product and visual design case studies, illustration</span>
+    </a>
+    <a class="door" href="/art/">
+      <span class="label">Art</span>
+      <span class="quiet">Installations, sound and curatorial work</span>
+    </a>
+  </section>
+
+  {latest.length > 0 && (
+    <section aria-labelledby="latest">
+      <h2 id="latest">Latest notes</h2>
+      {latest.map((note) => <Note note={note} />)}
+      <p><a href="/notes/">All notes</a></p>
+    </section>
+  )}
+</Base>
+
+<style>
+  .intro { padding: 32px 0 40px; }
+  .doors { display: grid; grid-template-columns: repeat(auto-fit, minmax(260px, 1fr)); gap: 16px; }
+  .door { display: flex; flex-direction: column; gap: 8px; padding: 32px; border: 1px solid var(--rule); text-decoration: none; min-height: 200px; justify-content: flex-end; }
+  .door:hover { border-color: var(--accent); }
+  .label { font-size: clamp(1.6rem, 3vw, 2.2rem); font-weight: 600; }
+</style>

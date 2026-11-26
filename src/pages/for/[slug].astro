@@ -1,0 +1,23 @@
+---
+// Unlisted selection pages for a single application, e.g. /for/governikus/.
+// They are not linked anywhere and are marked noindex.
+import { getCollection, getEntries, render } from 'astro:content';
+import Base from '../../layouts/Base.astro';
+import Card from '../../components/Card.astro';
+
+export async function getStaticPaths() {
+  return (await getCollection('selections')).map((entry) => ({ params: { slug: entry.id }, props: { entry } }));
+}
+const { entry } = Astro.props;
+const { Content } = await render(entry);
+const design = await getEntries(entry.data.design);
+const art = await getEntries(entry.data.art);
+---
+<Base title={entry.data.title} noindex>
+  <h1>{entry.data.title}</h1>
+  <div class="prose"><Content /></div>
+  <ul class="grid">
+    {design.map((e) => <Card href={`/design/${e.id}/`} title={e.data.title} summary={e.data.summary} cover={e.data.cover} meta={String(e.data.year)} />)}
+    {art.map((e) => <Card href={`/art/${e.id}/`} title={e.data.title} summary={e.data.summary} cover={e.data.cover} meta={String(e.data.year)} />)}
+  </ul>
+</Base>

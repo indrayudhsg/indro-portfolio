@@ -1,0 +1,23 @@
+---
+import Base from '../layouts/Base.astro';
+import { getIndex } from '../lib/content';
+
+const rows = await getIndex();
+---
+<Base title="Index" description="All work by year.">
+  <h1>Index</h1>
+  <p class="prose quiet">Everything on this site, newest first.</p>
+  <table>
+    <thead><tr><th>Year</th><th>Title</th><th>Section</th><th>Tags</th></tr></thead>
+    <tbody>
+      {rows.map((r) => (
+        <tr>
+          <td class="quiet">{r.year}</td>
+          <td><a href={r.section === 'Teaching' ? `/teaching/#${r.href.split('/')[2]}` : r.href}>{r.title}</a></td>
+          <td>{r.section}</td>
+          <td class="quiet">{r.tags.join(', ')}</td>
+        </tr>
+      ))}
+    </tbody>
+  </table>
+</Base>
