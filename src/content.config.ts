@@ -63,6 +63,24 @@ const teaching = defineCollection({
   }),
 });
 
+// Studio: single finished pieces such as etchings, prints, watercolours and crafts.
+// One file per piece. Process belongs in notes, tagged with the piece's id.
+export const studioMedia = ['etching', 'print', 'watercolour', 'drawing', 'craft', 'other'] as const;
+const studio = defineCollection({
+  loader: glob({ pattern: '**/*.md', base: './src/content/studio' }),
+  schema: z.object({
+    title: z.string(),
+    year: z.number(),
+    medium: z.enum(studioMedia),
+    technique: z.string().optional(), // e.g. "Drypoint on copper, edition of 8"
+    dimensions: z.string().optional(),
+    images: z.array(z.object({ src: z.string(), alt: z.string() })).default([]),
+    tags: z.array(z.string()).default([]),
+    available: z.boolean().default(false), // for later, if pieces are for sale
+    draft: z.boolean().default(false),
+  }),
+});
+
 // Unlisted selection pages for one application, e.g. /for/governikus.
 const selections = defineCollection({
   loader: glob({ pattern: '**/*.md', base: './src/content/selections' }),
@@ -73,4 +91,4 @@ const selections = defineCollection({
   }),
 });
 
-export const collections = { design, art, notes, teaching, selections };
+export const collections = { design, art, studio, notes, teaching, selections };

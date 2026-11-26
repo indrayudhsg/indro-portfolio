@@ -18,6 +18,7 @@ npm run build    # static site in dist/
 | `/` | Intro, the two doors (Design, Art), latest 3 notes | |
 | `/design/` | Case studies, illustration, branding | `src/content/design/` |
 | `/art/` | Works and curatorial projects | `src/content/art/` |
+| `/art/studio/` | Gallery of etchings, prints, watercolours and crafts, filterable by medium | `src/content/studio/` |
 | `/notes/` | Microblog, plus `/notes/rss.xml` | `src/content/notes/` |
 | `/teaching/` | Courses and workshops (linked from About and the footer) | `src/content/teaching/` |
 | `/about/`, `/de/about/` | Bio and CV in English and German | `src/components/CV.astro` |
@@ -48,6 +49,11 @@ The case study text.
 
 **An art work:** same idea in `src/content/art/`, with `medium`, `dimensions`, `credits` and
 `exhibitions` instead of client and role. Use `kind: curatorial` for curatorial projects.
+
+**A studio piece** (etching, print, watercolour, drawing, craft): add `src/content/studio/<slug>.md`
+with `title`, `year`, `medium` (one of etching, print, watercolour, drawing, craft, other),
+optional `technique` and `dimensions`, and `images`. Process photos go in a note with
+`projects: [<slug>]`.
 
 **A note:** add `src/content/notes/YYYY-MM-DD-something.md`:
 

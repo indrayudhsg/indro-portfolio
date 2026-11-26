@@ -16,6 +16,21 @@ export async function getArt() {
   return (await getCollection('art', live)).sort(byOrderThenYear);
 }
 
+export async function getStudio() {
+  return (await getCollection('studio', live)).sort(
+    (a, b) => b.data.year - a.data.year || a.data.title.localeCompare(b.data.title),
+  );
+}
+
+export const mediumLabel: Record<string, string> = {
+  etching: 'Etchings',
+  print: 'Prints',
+  watercolour: 'Watercolours',
+  drawing: 'Drawings',
+  craft: 'Crafts',
+  other: 'Other',
+};
+
 export async function getTeaching() {
   return (await getCollection('teaching', live)).sort(byOrderThenYear);
 }

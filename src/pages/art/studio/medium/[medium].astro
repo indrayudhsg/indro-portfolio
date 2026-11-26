@@ -1,0 +1,19 @@
+---
+import Base from '../../../../layouts/Base.astro';
+import StudioGrid from '../../../../components/StudioGrid.astro';
+import { getStudio, mediumLabel } from '../../../../lib/content';
+import { studioMedia } from '../../../../content.config';
+
+export async function getStaticPaths() {
+  const pieces = await getStudio();
+  const media = studioMedia.filter((m) => pieces.some((p) => p.data.medium === m));
+  return media.map((m) => ({ params: { medium: m }, props: { media, pieces: pieces.filter((p) => p.data.medium === m) } }));
+}
+const { medium } = Astro.params;
+const { media, pieces } = Astro.props;
+---
+<Base title={`${mediumLabel[medium]} · Studio`}>
+  <p class="quiet"><a href="/art/">Art</a> / <a href="/art/studio/">Studio</a></p>
+  <h1>{mediumLabel[medium]}</h1>
+  <StudioGrid pieces={pieces} media={media} current={medium} />
+</Base>
